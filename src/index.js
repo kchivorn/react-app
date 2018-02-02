@@ -1,49 +1,76 @@
+/* global $ */
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-class Button extends React.Component{
+class Card extends React.Component {
   constructor(props) {
     super(props);
-    this.localHandleClick = this.localHandleClick.bind(this);
+    this.state = {}
   }
 
-  localHandleClick() {
-    this.props.localHandleClick(this.props.increment);
+  componentDidMount() {
+    var component = this;
+    $.get("https://api.github.com/users/" + this.props.login, function(data){
+      component.setState(data);
+    });
   }
 
   render() {
-    return <button onClick={this.localHandleClick}> +{this.props.increment} </button>;
+    return (
+      <div>
+        <img src={this.state.avatar_url} width="80" />
+        <h3>{this.state.name}</h3>
+        <hr/>
+      </div>
+    )
   }
 }
 
-class Result extends React.Component {
+class Form extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleSubmit(e) {
+    e.preventDefault();
+    var loginInput = ReactDOM.findDOMNode(this.refs.login);
+    this.props.addCard(loginInput.value);
+    loginInput.value = '';
+  }
   render() {
-    return <div>{this.props.localCounter}</div>
+    return(
+      <form onSubmit={this.handleSubmit}>
+        <input placehoder="github login" ref="login" />
+        <button>Add</button>
+      </form>
+    )
   }
 }
 
 class Main extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {count: this.props.initialCount};
-    this.handleClick = this.handleClick.bind(this);
+    this.state = {logins: ['zpao', 'fisherwebdev']};
+    this.addCard = this.addCard.bind(this);
   }
 
-  handleClick(increment) {
-    this.setState({ count: this.state.count + increment });
+  addCard(val) {
+    this.setState({logins: this.state.logins.concat(val)});
   }
 
   render() {
+    var cards = this.state.logins.map(function(login) {
+      return (<Card login={login} />);
+    });
+
     return (
       <div>
-        <Button localHandleClick={this.handleClick} increment={1} />
-        <Button localHandleClick={this.handleClick} increment={5} />
-        <Button localHandleClick={this.handleClick} increment={20} />
-        <Button localHandleClick={this.handleClick} increment={100} />
-        <Result localCounter={this.state.count} />
+        <Form addCard={this.addCard} />
+        {cards}
       </div>
     )
   }
 }
 
-ReactDOM.render(<Main initialCount={7}/>, document.getElementById("root"));
+ReactDOM.render(<Main />, document.getElementById("root"));
