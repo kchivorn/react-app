@@ -1,76 +1,104 @@
 /* global $ */
 import React from 'react';
 import ReactDOM from 'react-dom';
+import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
+import './index.css'
 
-class Card extends React.Component {
+class StarsFrame extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {}
-  }
-
-  componentDidMount() {
-    var component = this;
-    $.get("https://api.github.com/users/" + this.props.login, function(data){
-      component.setState(data);
-    });
+    const numberOfStars = Math.floor(Math.random() * 9) + 1;
+    const stars = [];
+    for(let i=0 ; i < numberOfStars; i++) {
+      stars.push(
+        <span class="glyphicon glyphicon-star"></span>
+      );
+    }
+    this.state = { stars };
   }
 
   render() {
     return (
-      <div>
-        <img src={this.state.avatar_url} width="80" />
-        <h3>{this.state.name}</h3>
-        <hr/>
+      <div id="stars-frame">
+        <div class="well">
+         {this.state.stars}
+        </div>
+      </div>
+    );
+  }
+}
+
+class ButtonFrame extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <div id="button-frame">
+        <button class="btn btn-primary btn-lg">=</button>
+      </div>
+    );
+  }
+}
+
+class AnswerFrame extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <div id="answer-frame">
+        <div class="well">
+
+        </div>
+      </div>
+    );
+  }
+}
+
+class NumbersFrame extends React.Component {
+  constructor(props) {
+    super(props);
+    const numbers =[];
+    for(let i=1; i < 10; i++) {
+      numbers.push(<div class="number">{i}</div>)
+    }
+    this.state = {numbers};
+  }
+
+  render() {
+    return (
+      <div id="numbers-frame">
+        <div class="well">
+          {this.state.numbers}
+        </div>
+      </div>
+    );
+  }
+}
+
+class Game extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <div id="game">
+        <h2>Play Nine</h2>
+        <hr />
+        <div class="clearfix">
+          <StarsFrame />
+          <ButtonFrame />
+          <AnswerFrame />
+        </div>
+        <NumbersFrame />
       </div>
     )
   }
 }
 
-class Form extends React.Component {
-  constructor(props) {
-    super(props);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
 
-  handleSubmit(e) {
-    e.preventDefault();
-    var loginInput = ReactDOM.findDOMNode(this.refs.login);
-    this.props.addCard(loginInput.value);
-    loginInput.value = '';
-  }
-  render() {
-    return(
-      <form onSubmit={this.handleSubmit}>
-        <input placehoder="github login" ref="login" />
-        <button>Add</button>
-      </form>
-    )
-  }
-}
-
-class Main extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {logins: ['zpao', 'fisherwebdev']};
-    this.addCard = this.addCard.bind(this);
-  }
-
-  addCard(val) {
-    this.setState({logins: this.state.logins.concat(val)});
-  }
-
-  render() {
-    var cards = this.state.logins.map(function(login) {
-      return (<Card login={login} />);
-    });
-
-    return (
-      <div>
-        <Form addCard={this.addCard} />
-        {cards}
-      </div>
-    )
-  }
-}
-
-ReactDOM.render(<Main />, document.getElementById("root"));
+ReactDOM.render(<Game />, document.getElementById("root"));
