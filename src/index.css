@@ -16,6 +16,34 @@
   margin-top: 50px;
 }
 
+#button-frame .btn-lg {
+  width: 100px;
+  height: 100px;
+}
+
+#button-frame .equal, .ok, .remove {
+  font-size: 90px;
+  line-height: 90px;
+  white-space: nowrap;
+}
+
+#button-frame .refresh {
+  height: 32px;
+  width: 50px;
+  font-size: 15px;
+  line-height: 30px;
+  white-space: nowrap;
+}
+
+#button-frame .glyphicon-refresh {
+  margin-left: -6px;
+  font-size: 25px;
+}
+
+#button-frame .glyphicon-ok, #button-frame .glyphicon-remove {
+  margin-left:  -5px;
+}
+
 #stars-frame .well, #answer-frame .well {
   height: 200px;
 }
@@ -34,5 +62,11 @@
 #numbers-frame .selected-true {
   background-color: #e8e8e8;
   color: #ddd;
+  cursor: not-allowed;
+}
+
+#numbers-frame .used-true {
+  background-color: #aaddaa;
+  color: #99bb99;
   cursor: not-allowed;
 }
